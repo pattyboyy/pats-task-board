@@ -10,7 +10,6 @@
     integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
   <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
-
   <link rel="stylesheet" href="./assets/css/style.css" />
   <title>Task Board</title>
 </head>
@@ -23,6 +22,36 @@
   <div class="container">
     <div class="text-center mb-5">
       <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#formModal">Add Task</button>
+    </div>
+    <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="formModalLabel">Add New Task</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="taskTitle" class="form-label">Title</label>
+                <input type="text" class="form-control" id="taskTitle" required>
+              </div>
+              <div class="mb-3">
+                <label for="taskDescription" class="form-label">Description</label>
+                <textarea class="form-control" id="taskDescription" rows="3" required></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="taskDueDate" class="form-label">Due Date</label>
+                <input type="date" class="form-control" id="taskDueDate" required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="saveTask">Save Task</button>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="row swim-lanes text-center justify-content-between">
       <div class="col-12 col-lg-4 d-flex">
@@ -58,38 +87,6 @@
     </div>
   </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="formModalLabel">Add Task</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <label for="task-title" class="form-label">Title</label>
-              <input type="text" class="form-control" id="task-title" required>
-            </div>
-            <div class="mb-3">
-              <label for="task-description" class="form-label">Description</label>
-              <textarea class="form-control" id="task-description" rows="3" required></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="task-due" class="form-label">Due Date</label>
-              <input class="form-control" id="task-due" required>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="save-task">Save Task</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
     crossorigin="anonymous"></script>
@@ -97,7 +94,6 @@
   <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
     integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wauy76x7U=" crossorigin="anonymous"></script>
-
   <script src="./assets/js/script.js"></script>
 </body>
 

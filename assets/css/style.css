@@ -1,28 +1,28 @@
 body {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 16px;
-  }
-  
-  .swim-lanes {
-    min-height: 60vh;
-  }
-  
-  .task-card {
-    margin: 0 auto;
-    cursor: grab;
-  }
-  
-  .task-card.dragging {
-    opacity: 0.8;
-    z-index: 9999;
-  }
-  
-  .due-date {
-    font-size: 0.8rem;
-    color: #6c757d;
-  }
-  
-  .lane {
-    position: relative;
-    z-index: 1;
-  }
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+}
+
+.swim-lanes {
+  min-height: 60vh;
+}
+
+.task-card {
+  margin: 0 auto;
+}
+
+.task-card:hover {
+  cursor: grab;
+}
+
+.task-card.nearing-deadline {
+  background-color: #fff3cd;
+}
+
+.task-card.overdue {
+  background-color: #f8d7da;
+}
+
+.task-card.ui-draggable-dragging {
+  z-index: 1000;
+}
