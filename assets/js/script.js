@@ -48,9 +48,11 @@ function renderTaskList() {
   $(".task-card").draggable({
     revert: "invalid",
     revertDuration: 200,
-    snap: ".lane",
+    containment: ".swim-lanes",
+    zIndex: 100,
+    snap: ".card-body",
     snapMode: "inner",
-    snapTolerance: 20, // Add this line to adjust the snapping tolerance
+    snapTolerance: 20,
     start: function() {
       $(this).addClass("dragging");
     },
@@ -96,27 +98,40 @@ function handleDeleteTask(event) {
   renderTaskList();
 }
 
+
 // Create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
     const card = ui.draggable;
     const taskId = parseInt(card.attr("data-task-id"));
     const newStatus = $(this).attr("id");
   
-    const task = taskList.find((task) => task.id === taskId);
-    task.status = newStatus;
-    saveTaskList();
+    const taskIndex = taskList.findIndex((task) => task.id === taskId);
+    if (taskIndex !== -1) {
+      taskList[taskIndex].status = newStatus;
+      saveTaskList();
   
-    // Center the task card within the column
-    const columnWidth = $(this).width();
-    const cardWidth = card.width();
-    const leftOffset = (columnWidth - cardWidth) / 2;
-    card.css({
-      left: leftOffset + "px",
-      top: "0"
-    });
+      // Center the task card within the box
+      const box = $(this).find(".card-body");
+      const boxWidth = box.width();
+      const boxHeight = box.height();
+      const cardWidth = card.outerWidth();
+      const cardHeight = card.outerHeight();
+      const leftOffset = (boxWidth - cardWidth) / 2;
+      const topOffset = (boxHeight - cardHeight) / 2;
+      card.css({
+        position: "absolute",
+        left: leftOffset + "px",
+        top: topOffset + "px"
+      });
   
-    renderTaskList();
+      // Remove the task card from its original position
+      card.detach();
+  
+      // Append the task card to the new box
+      box.append(card);
+    }
   }
+
 
 // Save the task list to localStorage
 function saveTaskList() {
