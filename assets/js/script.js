@@ -1,0 +1,160 @@
+let taskList = [];
+let nextId = 1;
+
+function generateTaskId() {
+  return nextId++;
+}
+
+function createTaskCard(task) {
+  const taskCard = $('<div class="card task-card mb-3">');
+  taskCard.attr('id', `task-${task.id}`);
+  taskCard.attr('data-task', JSON.stringify(task));
+
+  const cardBody = $('<div class="card-body">');
+  const taskTitle = $('<h5 class="card-title">').text(task.title);
+  const taskDescription = $('<p class="card-text">').text(task.description);
+  const taskDeadline = $('<p class="card-text">').text(`Deadline: ${task.deadline}`);
+  const deleteButton = $('<button class="btn btn-danger delete-task">').text('Delete');
+
+  cardBody.append(taskTitle, taskDescription, taskDeadline, deleteButton);
+  taskCard.append(cardBody);
+
+  return taskCard;
+}
+
+function renderTaskList() {
+    $('#todo-cards, #in-progress-cards, #done-cards').empty();
+  
+    taskList.forEach(task => {
+      const taskCard = createTaskCard(task);
+      taskCard.draggable({
+        containment: '.swim-lanes',
+        cursor: 'move',
+        revert: 'invalid',
+        start: function () {
+          $(this).addClass('dragging');
+        },
+        stop: function () {
+          $(this).removeClass('dragging');
+        }
+      });
+  
+      $(`#${task.status}`).append(taskCard);
+    });
+  
+    // Make the task cards draggable again after rendering
+    $(".task-card").draggable({
+        revert: false,
+        start: function (event, ui) {
+          $(this).addClass("dragging");
+          $(this).css('zIndex', 1000); // Set a high zIndex value
+        },
+        stop: function (event, ui) {
+          $(this).removeClass("dragging");
+          $(this).css('zIndex', ''); // Reset the zIndex to its default value
+        },
+      });
+  }
+
+function handleAddTask(event) {
+  event.preventDefault();
+
+  const title = $('#task-title').val();
+  const description = $('#task-description').val();
+  const deadline = $('#task-deadline').val();
+
+  if (title && description && deadline) {
+    const newTask = {
+      id: generateTaskId(),
+      title,
+      description,
+      deadline,
+      status: 'todo-cards'
+    };
+
+    taskList.push(newTask);
+    saveTasksToLocalStorage();
+
+    renderTaskList();
+
+    $('#task-title').val('');
+    $('#task-description').val('');
+    $('#task-deadline').val('');
+    $('#formModal').modal('hide');
+  }
+}
+
+function handleDeleteTask(event) {
+  const taskCard = $(event.target).closest('.task-card');
+  const taskId = parseInt(taskCard.attr('id').split('-')[1]);
+
+  taskList = taskList.filter(task => task.id !== taskId);
+  saveTasksToLocalStorage();
+
+  taskCard.remove();
+}
+
+function handleDrop(event, ui) {
+    const taskCard = ui.draggable;
+    const taskId = parseInt(taskCard.attr("id").split('-')[1]);
+    const newStatus = event.target.id;
+    const dropTarget = $(event.target);
+  
+    // Find the task in the taskList and update its status
+    const task = taskList.find(task => task.id === taskId);
+    if (task) {
+      // Remove the task card from its current lane
+      taskCard.detach();
+  
+      // Update the task status
+      task.status = newStatus;
+      saveTasksToLocalStorage();
+  
+      // Append the task card to the new lane
+      dropTarget.append(taskCard);
+  
+      // Prevent snapping to the left
+      taskCard.css({
+        position: 'relative',
+        left: 0,
+        top: 0
+      });
+    }
+  }
+  
+
+function saveTasksToLocalStorage() {
+  localStorage.setItem("tasks", JSON.stringify(taskList));
+  localStorage.setItem("nextId", JSON.stringify(nextId));
+}
+
+function loadTasksFromLocalStorage() {
+  const storedTasks = localStorage.getItem("tasks");
+  const storedNextId = localStorage.getItem("nextId");
+
+  if (storedTasks) {
+    taskList = JSON.parse(storedTasks);
+  }
+
+  if (storedNextId) {
+    nextId = JSON.parse(storedNextId);
+  }
+}
+
+$(document).ready(function () {
+  loadTasksFromLocalStorage();
+  renderTaskList();
+
+  $('#add-task-form').on('submit', handleAddTask);
+  $('.swim-lanes').on('click', '.delete-task', handleDeleteTask);
+
+  $('.card-body').droppable({
+    accept: '.task-card',
+    drop: handleDrop
+  });
+
+  $('#task-deadline').datepicker();
+  $('#add-task-button').on('click', function () {
+    $('#formModal').modal('show');
+  });
+});
