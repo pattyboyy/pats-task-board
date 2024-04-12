@@ -1,4 +1,5 @@
-This project is a personal task board to help me prioritize and manage tasks
+This project is a personal task board to help me prioritize and manage tasks.
+
 repo: https://pattyboyy.github.io/pats-task-board/
 github: https://github.com/pattyboyy/pats-task-board/
 
