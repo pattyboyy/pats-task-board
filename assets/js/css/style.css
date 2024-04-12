@@ -48,3 +48,12 @@
   opacity: 0.5;
   z-index: 4; /* Increase the z-index value */
 }
+
+.task-card.near-due {
+  background-color: #ffeeba;
+}
+
+.task-card.overdue {
+  background-color: #f8d7da;
+  color: #721c24;
+}

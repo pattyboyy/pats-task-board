@@ -6,21 +6,32 @@ function generateTaskId() {
 }
 
 function createTaskCard(task) {
-  const taskCard = $('<div class="card task-card mb-3">');
-  taskCard.attr('id', `task-${task.id}`);
-  taskCard.attr('data-task', JSON.stringify(task));
-
-  const cardBody = $('<div class="card-body">');
-  const taskTitle = $('<h5 class="card-title">').text(task.title);
-  const taskDescription = $('<p class="card-text">').text(task.description);
-  const taskDeadline = $('<p class="card-text">').text(`Deadline: ${task.deadline}`);
-  const deleteButton = $('<button class="btn btn-danger delete-task">').text('Delete');
-
-  cardBody.append(taskTitle, taskDescription, taskDeadline, deleteButton);
-  taskCard.append(cardBody);
-
-  return taskCard;
-}
+    const taskCard = $('<div class="card task-card mb-3">');
+    taskCard.attr('id', `task-${task.id}`);
+    taskCard.attr('data-task', JSON.stringify(task));
+  
+    const cardBody = $('<div class="card-body">');
+    const taskTitle = $('<h5 class="card-title">').text(task.title);
+    const taskDescription = $('<p class="card-text">').text(task.description);
+    const taskDeadline = $('<p class="card-text">').text(`Deadline: ${task.deadline}`);
+    const deleteButton = $('<button class="btn btn-danger delete-task">').text('Delete');
+  
+    cardBody.append(taskTitle, taskDescription, taskDeadline, deleteButton);
+    taskCard.append(cardBody);
+  
+    // Check due date and apply CSS classes
+    const dueDate = new Date(task.deadline);
+    const currentDate = new Date();
+    const oneWeekFromNow = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+  
+    if (dueDate < currentDate) {
+      taskCard.addClass('overdue');
+    } else if (dueDate <= oneWeekFromNow) {
+      taskCard.addClass('near-due');
+    }
+  
+    return taskCard;
+  }
 
 function renderTaskList() {
     $('#todo-cards, #in-progress-cards, #done-cards').empty();
