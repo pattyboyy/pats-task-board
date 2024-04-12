@@ -1,59 +1,59 @@
 .swim-lanes {
-  min-height: 60vh;
-  position: relative;
-  z-index: 0; /* Add this line */
-}
-
-.lane {
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
-  padding: 10px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  position: relative; /* Add this line */
-  z-index: 1; /* Add this line */
-}
-
-.lane .card-header {
-  background-color: #fff;
-  color: #000;
-  z-index: 2; /* Increase the z-index value */
-}
-
-.lane .card-body {
-  flex-grow: 1;
-  position: relative;
-  z-index: 1; /* Increase the z-index value */
-  min-height: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.task-card {
-  margin-bottom: 10px;
-  cursor: grab;
-  position: relative;
-  z-index: 3; /* Increase the z-index value */
-  width: 100%;
-}
-
-.task-card:hover {
-  cursor: grab;
-}
-
-.task-card.dragging {
-  opacity: 0.5;
-  z-index: 4; /* Increase the z-index value */
-}
-
-.task-card.near-due {
-  background-color: #ffeeba;
-}
-
-.task-card.overdue {
-  background-color: #f8d7da;
-  color: #721c24;
-}
+    min-height: 60vh;
+    position: relative;
+    z-index: 0;
+  }
+  
+  .lane {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .lane .card-header {
+    background-color: #fff;
+    color: #000;
+    z-index: 2;
+  }
+  
+  .lane .card-body {
+    flex-grow: 1;
+    position: relative;
+    z-index: 2;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .task-card {
+    margin-bottom: 10px;
+    cursor: grab;
+    position: relative;
+    z-index: 3;
+    width: 100%;
+  }
+  
+  .task-card:hover {
+    cursor: grab;
+  }
+  
+  .task-card.dragging {
+    opacity: 0.5;
+    z-index: 4;
+  }
+  
+  .task-card.near-due {
+    background-color: #ffeeba;
+  }
+  
+  .task-card.overdue {
+    background-color: #f8d7da;
+    color: #721c24;
+  }

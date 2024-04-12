@@ -33,7 +33,7 @@ function createTaskCard(task) {
     return taskCard;
   }
 
-function renderTaskList() {
+  function renderTaskList() {
     $('#todo-cards, #in-progress-cards, #done-cards').empty();
   
     taskList.forEach(task => {
@@ -50,21 +50,24 @@ function renderTaskList() {
         }
       });
   
-      $(`#${task.status}`).append(taskCard);
+      // Check if task.status is defined and non-empty, otherwise use a default value
+      const status = task.status && task.status.trim() !== '' ? task.status : 'todo-cards';
+      const safeStatus = status.replace(/[^a-zA-Z0-9-_]/g, '');
+      $(`#${safeStatus}`).append(taskCard);
     });
   
     // Make the task cards draggable again after rendering
     $(".task-card").draggable({
-        revert: false,
-        start: function (event, ui) {
-          $(this).addClass("dragging");
-          $(this).css('zIndex', 1000); // Set a high zIndex value
-        },
-        stop: function (event, ui) {
-          $(this).removeClass("dragging");
-          $(this).css('zIndex', ''); // Reset the zIndex to its default value
-        },
-      });
+      revert: false,
+      start: function (event, ui) {
+        $(this).addClass("dragging");
+        $(this).css('zIndex', 1000); // Set a high zIndex value
+      },
+      stop: function (event, ui) {
+        $(this).removeClass("dragging");
+        $(this).css('zIndex', ''); // Reset the zIndex to its default value
+      },
+    });
   }
 
 function handleAddTask(event) {
@@ -108,8 +111,8 @@ function handleDeleteTask(event) {
 function handleDrop(event, ui) {
     const taskCard = ui.draggable;
     const taskId = parseInt(taskCard.attr("id").split('-')[1]);
-    const newStatus = event.target.id;
-    const dropTarget = $(event.target);
+    const droppedLane = $(event.target).closest('.card-body').parent().attr('id');
+    const originalLane = taskCard.parent().parent().attr('id');
   
     // Find the task in the taskList and update its status
     const task = taskList.find(task => task.id === taskId);
@@ -117,12 +120,14 @@ function handleDrop(event, ui) {
       // Remove the task card from its current lane
       taskCard.detach();
   
-      // Update the task status
-      task.status = newStatus;
-      saveTasksToLocalStorage();
+      // Update the task status if the lane has changed
+      if (droppedLane !== originalLane) {
+        task.status = droppedLane;
+        saveTasksToLocalStorage();
+      }
   
-      // Append the task card to the new lane
-      dropTarget.append(taskCard);
+      // Append the task card to the new lane or reorder within the same lane
+      $(event.target).closest('.card-body').append(taskCard);
   
       // Prevent snapping to the left
       taskCard.css({
@@ -153,19 +158,19 @@ function loadTasksFromLocalStorage() {
 }
 
 $(document).ready(function () {
-  loadTasksFromLocalStorage();
-  renderTaskList();
-
-  $('#add-task-form').on('submit', handleAddTask);
-  $('.swim-lanes').on('click', '.delete-task', handleDeleteTask);
-
-  $('.card-body').droppable({
-    accept: '.task-card',
-    drop: handleDrop
+    loadTasksFromLocalStorage();
+    renderTaskList();
+  
+    $('#add-task-form').on('submit', handleAddTask);
+    $('.swim-lanes').on('click', '.delete-task', handleDeleteTask);
+  
+    $('.card-body').droppable({
+      accept: '.task-card',
+      drop: handleDrop
+    });
+  
+    $('#task-deadline').datepicker();
+    $('#add-task-button').on('click', function () {
+      $('#formModal').modal('show');
+    });
   });
-
-  $('#task-deadline').datepicker();
-  $('#add-task-button').on('click', function () {
-    $('#formModal').modal('show');
-  });
-});
